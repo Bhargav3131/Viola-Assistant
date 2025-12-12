@@ -3,7 +3,7 @@ from PIL import Image
 from google import genai
 import tkinter as tk
 
-API_KEY = "AIzaSyBdrmfptKVrylajFmTlnnZqT-eKv9jIwCE"
+API_KEY = "YOUR API KEY HERE"
 chathistory = "You are Viola - The most friendly AI Assistant. Give brief and concise responses, not detailed ones. Provide detailed responses only when asked. And don't put 'Viola:' before response."
 client = genai.Client(api_key=API_KEY)
 
@@ -97,3 +97,4 @@ sendbtn.grid(row=0, column=1)
 add_message("Hello! How can I assist you today?", "bot")
 
 root.mainloop()
+
