@@ -1,8 +1,9 @@
 from customtkinter import *
 from PIL import Image
 from google import genai
+import tkinter as tk
 
-API_KEY = "your api key here"
+API_KEY = "AIzaSyBdrmfptKVrylajFmTlnnZqT-eKv9jIwCE"
 chathistory = "You are Viola - The most friendly AI Assistant. Give brief and concise responses, not detailed ones. Provide detailed responses only when asked. And don't put 'Viola:' before response."
 client = genai.Client(api_key=API_KEY)
 
@@ -11,7 +12,7 @@ set_default_color_theme("blue")
 
 root = CTk()
 root.geometry("350x650")
-root.title("Viola Chatbot")
+root.title("Viola Assistant")
 
 root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(1, weight=0)
@@ -33,6 +34,7 @@ def add_message(text, sender="user"):
                        text_color="black", corner_radius=10,
                        font=("Arial", 13), wraplength=250, padx=10, pady=6)
         msg.pack(anchor="w", pady=4, padx=8)
+
     chat_frame.update_idletasks()
     chat_frame._parent_canvas.yview_moveto(1)
 
@@ -49,10 +51,21 @@ def send_to_gemini():
             contents=chathistory + "\nUser: " + user_text
         )
         bot_reply = response.text.strip()
-    except Exception as e:
+    except:
         bot_reply = "Sorry, something went wrong."
     add_message(bot_reply, "bot")
-    chathistory += f"\nUser: {user_text}\nSapna: {bot_reply}"
+    chathistory += f"\nUser: {user_text}\nViola: {bot_reply}"
+
+def on_enter(event):
+    if (event.state & 0x0001) != 0:
+        userinput.insert("insert", "\n")
+        return "break"
+    send_to_gemini()
+    return "break"
+
+def on_shift_enter(event):
+    userinput.insert("insert", "\n")
+    return "break"
 
 input_frame = CTkFrame(master=root, fg_color="white")
 input_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
@@ -68,6 +81,9 @@ userinput = CTkTextbox(master=input_frame,
                        text_color="black")
 userinput.grid(row=0, column=0, sticky="ew", padx=(0, 10))
 
+userinput.bind("<Return>", on_enter)
+userinput.bind("<Shift-Return>", on_shift_enter)
+
 sendbtn = CTkButton(master=input_frame,
                     text="Send",
                     corner_radius=20,
@@ -81,5 +97,3 @@ sendbtn.grid(row=0, column=1)
 add_message("Hello! How can I assist you today?", "bot")
 
 root.mainloop()
-
-
